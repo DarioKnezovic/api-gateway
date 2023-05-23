@@ -1,1 +1,5 @@
-module api-gateway
+module github.com/DarioKnezovic/api-gateway
+
+go 1.20
+
+require github.com/gorilla/mux v1.8.0 // indirect
