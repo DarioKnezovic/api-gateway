@@ -23,7 +23,7 @@ func LoadConfig() *Config {
 	}
 
 	apiPort := getEnv("API_PORT", "8080")
-	projectName := getEnv("PROJECT_NAME", "TEST")
+	projectName := getEnv("PROJECT_NAME", "")
 	databaseURL := getEnv("DATABASE_URL", "")
 	debugMode, err := strconv.ParseBool(getEnv("DEBUG_MODE", "false"))
 	if err != nil {
