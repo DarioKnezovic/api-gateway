@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/DarioKnezovic/api-gateway/config"
 	"log"
 	"net/http"
 
@@ -10,7 +11,8 @@ import (
 )
 
 func main() {
-	log.Println("Running server...")
+	cfg := config.LoadConfig()
+	log.Printf("Running %s ...", cfg.ProjectName)
 	router := mux.NewRouter()
 
 	// Middleware
@@ -21,5 +23,5 @@ func main() {
 	router.HandleFunc("/register", handlers.AuthHandler).Methods("POST")
 
 	// Start the server
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(cfg.APIPort, router))
 }
