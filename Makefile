@@ -3,7 +3,7 @@ IMAGE_NAME := api-gateway
 
 .PHONY: build
 build:
-	docker build -t $(IMAGE_NAME) .
+	docker-compose build
 
 .PHONY: run
 run:
@@ -15,5 +15,4 @@ hot-reload:
 
 .PHONY: dev
 dev:
-	make build
-	make hot-reload
+	docker-compose up
