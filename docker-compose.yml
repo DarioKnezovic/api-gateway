@@ -1,0 +1,18 @@
+version: "3.8"
+
+networks:
+  abd-backend:   # Define the network here
+    driver: bridge
+
+services:
+  api:
+    hostname: api-gateway
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - abd-backend
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app

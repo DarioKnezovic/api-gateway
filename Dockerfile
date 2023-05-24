@@ -19,5 +19,4 @@ COPY . .
 # Expose the port on which the application will listen
 EXPOSE 8080
 
-# Set the entry point command to run the application with air
-CMD ["air", "-c", ".air.toml"]
+ENTRYPOINT ["air"]
