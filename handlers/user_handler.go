@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/DarioKnezovic/api-gateway/config"
+	"github.com/DarioKnezovic/api-gateway/utils"
 	_ "github.com/markdingo/cslb"
 	"io/ioutil"
 	"log"
@@ -14,6 +15,10 @@ var routeMapping = map[string]string{
 	"/api/logout":   "/api/user/logout",
 }
 
+const (
+	INTERNAL_SERVER_ERROR = "Internal server error"
+)
+
 // UserHandler handles requests related to user management
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	// Create a new HTTP client
@@ -25,7 +30,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	forwardRequest, err := http.NewRequest(r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path], r.Body)
 	if err != nil {
 		log.Printf("Failed to create forward request: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
 		return
 	}
 
@@ -36,7 +41,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	forwardResponse, err := client.Do(forwardRequest)
 	if err != nil {
 		log.Printf("Failed to forward request: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
 		return
 	}
 	defer forwardResponse.Body.Close()
@@ -45,7 +50,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	responseBody, err := ioutil.ReadAll(forwardResponse.Body)
 	if err != nil {
 		log.Printf("Failed to read response body: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
 		return
 	}
 
@@ -60,6 +65,5 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s request %s returned status code %d",
 		r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path], forwardResponse.StatusCode)
 
-	w.WriteHeader(forwardResponse.StatusCode)
-	w.Write(responseBody)
+	utils.RespondWithJSON(w, forwardResponse.StatusCode, responseBody)
 }
