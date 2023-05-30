@@ -15,6 +15,7 @@ require (
 	github.com/gohugoio/hugo v0.112.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/imdario/mergo v0.3.15 // indirect
+	github.com/markdingo/cslb v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect

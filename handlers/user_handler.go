@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/DarioKnezovic/api-gateway/config"
+	_ "github.com/markdingo/cslb"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -19,9 +19,8 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	client := http.Client{}
 	cfg := config.LoadConfig()
 
-	fmt.Println("We have following request")
-	fmt.Println(r)
 	// Create a new request to forward to the User Management service
+	log.Printf("Forwarding %s request to: %s", r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path])
 	forwardRequest, err := http.NewRequest(r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path], r.Body)
 	if err != nil {
 		log.Printf("Failed to create forward request: %v", err)
@@ -57,6 +56,9 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set the status code and write the response body to the client
+	log.Printf("%s request %s returned status code %d",
+		r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path], forwardResponse.StatusCode)
+
 	w.WriteHeader(forwardResponse.StatusCode)
 	w.Write(responseBody)
 }
