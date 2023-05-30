@@ -21,7 +21,7 @@ func main() {
 
 	// Routes
 	router.HandleFunc("/login", handlers.UserHandler).Methods("POST")
-	router.HandleFunc("/api/user/register", handlers.UserHandler).Methods("POST")
+	router.HandleFunc("/register", handlers.UserHandler).Methods("POST")
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), router))

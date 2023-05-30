@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+var routeMapping = map[string]string{
+	"/register": "/api/user/register",
+	"/login":    "/api/user/login",
+}
+
 // UserHandler handles requests related to user management
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	// Create a new HTTP client
@@ -17,7 +22,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("We have following request")
 	fmt.Println(r)
 	// Create a new request to forward to the User Management service
-	forwardRequest, err := http.NewRequest(r.Method, cfg.UserServiceURL+r.URL.Path, r.Body)
+	forwardRequest, err := http.NewRequest(r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path], r.Body)
 	if err != nil {
 		log.Printf("Failed to create forward request: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -55,14 +60,3 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(forwardResponse.StatusCode)
 	w.Write(responseBody)
 }
-
-/*func main() {
-	// Create a new HTTP server and register the UserManagementHandler
-	http.HandleFunc("/users", UserManagementHandler)
-	http.HandleFunc("/login", UserManagementHandler)
-	http.HandleFunc("/register", UserManagementHandler)
-
-	// Start the API Gateway server
-	log.Println("API Gateway server started on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}*/
