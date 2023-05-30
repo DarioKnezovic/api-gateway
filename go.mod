@@ -10,6 +10,7 @@ require (
 	github.com/cli/safeexec v1.0.1 // indirect
 	github.com/cosmtrek/air v1.43.0 // indirect
 	github.com/creack/pty v1.1.18 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gohugoio/hugo v0.112.1 // indirect

@@ -13,6 +13,7 @@ type Config struct {
 	ProjectName    string
 	DatabaseURL    string
 	UserServiceURL string
+	JWTSecretKey   string
 	DebugMode      bool
 }
 
@@ -30,6 +31,7 @@ func LoadConfig() *Config {
 	if userServiceUrl == "" {
 		log.Fatal("USER_SERVICE env is not setup. Please set it for appropriate working.")
 	}
+	jwtSecretKey := getEnv("JWT_SECRET_KEY", "")
 	debugMode, err := strconv.ParseBool(getEnv("DEBUG_MODE", "false"))
 	if err != nil {
 		log.Println("Failed to parse DEBUG_MODE. Defaulting to false.")
@@ -42,6 +44,7 @@ func LoadConfig() *Config {
 		DatabaseURL:    databaseURL,
 		UserServiceURL: userServiceUrl,
 		DebugMode:      debugMode,
+		JWTSecretKey:   jwtSecretKey,
 	}
 }
 

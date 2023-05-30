@@ -9,8 +9,9 @@ import (
 )
 
 var routeMapping = map[string]string{
-	"/register": "/api/user/register",
-	"/login":    "/api/user/login",
+	"/api/register": "/api/user/register",
+	"/api/login":    "/api/user/login",
+	"/api/logout":   "/api/user/logout",
 }
 
 // UserHandler handles requests related to user management
