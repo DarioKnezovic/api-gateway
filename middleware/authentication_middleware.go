@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"fmt"
+	"github.com/DarioKnezovic/api-gateway/clients"
 	"github.com/DarioKnezovic/api-gateway/config"
 	"github.com/DarioKnezovic/api-gateway/utils"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -14,6 +15,7 @@ const (
 	BEARER               = "bearer"
 	AUTH_TOKEN_MISSING   = "Authorization token is missing"
 	AUTH_TOKEN_NOT_VALID = "Authorization token is not valid"
+	UNAUTHORIZED         = "Unauthorized"
 )
 
 func extractTokenFromBearerHeader(authorizationHeader string) (string, bool) {
@@ -49,8 +51,27 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			utils.RespondWithError(w, http.StatusForbidden, AUTH_TOKEN_NOT_VALID)
 			return
 		}
-		fmt.Println(claims)
-		// TODO: Implement gRPC
+
+		userClient, err := clients.NewUserClient("user-service:50051")
+		if err != nil {
+			log.Printf("Failed to create UserClient: %v", err)
+			utils.RespondWithError(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+
+		exists, err := userClient.CheckUserExistence(strconv.Itoa(int(claims.UserID)))
+		if err != nil {
+			log.Printf("Failed to check user existence: %v", err)
+			utils.RespondWithError(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+
+		if exists {
+			next.ServeHTTP(w, r)
+		} else {
+			utils.RespondWithError(w, http.StatusUnauthorized, UNAUTHORIZED)
+			return
+		}
 
 		// Call the next handler
 		next.ServeHTTP(w, r)
