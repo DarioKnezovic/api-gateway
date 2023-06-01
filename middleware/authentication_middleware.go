@@ -2,11 +2,9 @@ package middleware
 
 import (
 	"github.com/DarioKnezovic/api-gateway/clients"
-	"github.com/DarioKnezovic/api-gateway/config"
 	"github.com/DarioKnezovic/api-gateway/utils"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -29,7 +27,6 @@ func extractTokenFromBearerHeader(authorizationHeader string) (string, bool) {
 
 func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cfg := config.LoadConfig()
 
 		authorizationHeader := r.Header.Get(AUTHORIZATION_HEADER)
 		if authorizationHeader == "" {
@@ -45,13 +42,6 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		claims, err := utils.VerifyJWT(token, []byte(cfg.JWTSecretKey))
-		if err != nil {
-			log.Println(err)
-			utils.RespondWithError(w, http.StatusForbidden, AUTH_TOKEN_NOT_VALID)
-			return
-		}
-
 		userClient, err := clients.NewUserClient("user-service:50051")
 		if err != nil {
 			log.Printf("Failed to create UserClient: %v", err)
@@ -59,7 +49,7 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		exists, err := userClient.CheckUserExistence(strconv.Itoa(int(claims.UserID)))
+		exists, err := userClient.CheckUserExistence(token)
 		if err != nil {
 			log.Printf("Failed to check user existence: %v", err)
 			utils.RespondWithError(w, http.StatusInternalServerError, "Internal Server Error")

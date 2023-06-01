@@ -5,7 +5,7 @@ option go_package = "./user";
 package user;
 
 message UserExistsRequest {
-  string userId = 1;
+  string token = 1;
 }
 
 message UserExistsResponse {
