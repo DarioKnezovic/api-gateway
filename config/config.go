@@ -9,12 +9,13 @@ import (
 
 // Config holds the configuration values
 type Config struct {
-	APIPort        string
-	ProjectName    string
-	DatabaseURL    string
-	UserServiceURL string
-	JWTSecretKey   string
-	DebugMode      bool
+	APIPort            string
+	ProjectName        string
+	DatabaseURL        string
+	UserServiceURL     string
+	CampaignServiceURL string
+	JWTSecretKey       string
+	DebugMode          bool
 }
 
 // LoadConfig loads the configuration values from environment variables or the .env file
@@ -31,6 +32,10 @@ func LoadConfig() *Config {
 	if userServiceUrl == "" {
 		log.Fatal("USER_SERVICE env is not setup. Please set it for appropriate working.")
 	}
+	campaignServiceUrl := getEnv("CAMPAIGN_SERVICE", "")
+	if campaignServiceUrl == "" {
+		log.Fatal("CAMPAIGN_SERVICE env is not setup. Please set it for appropriate working.")
+	}
 	jwtSecretKey := getEnv("JWT_SECRET_KEY", "")
 	debugMode, err := strconv.ParseBool(getEnv("DEBUG_MODE", "false"))
 	if err != nil {
@@ -39,12 +44,13 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		APIPort:        apiPort,
-		ProjectName:    projectName,
-		DatabaseURL:    databaseURL,
-		UserServiceURL: userServiceUrl,
-		DebugMode:      debugMode,
-		JWTSecretKey:   jwtSecretKey,
+		APIPort:            apiPort,
+		ProjectName:        projectName,
+		DatabaseURL:        databaseURL,
+		UserServiceURL:     userServiceUrl,
+		CampaignServiceURL: campaignServiceUrl,
+		DebugMode:          debugMode,
+		JWTSecretKey:       jwtSecretKey,
 	}
 }
 

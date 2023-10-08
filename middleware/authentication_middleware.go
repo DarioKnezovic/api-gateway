@@ -50,9 +50,10 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		exists, err := userClient.CheckUserExistence(token)
+		// TODO: Handle this case better
 		if err != nil {
 			log.Printf("Failed to check user existence: %v", err)
-			utils.RespondWithError(w, http.StatusInternalServerError, "Internal Server Error")
+			utils.RespondWithError(w, http.StatusUnauthorized, "Token is not valid")
 			return
 		}
 
