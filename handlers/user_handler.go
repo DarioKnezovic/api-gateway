@@ -4,9 +4,9 @@ import (
 	"github.com/DarioKnezovic/api-gateway/config"
 	"github.com/DarioKnezovic/api-gateway/utils"
 	_ "github.com/markdingo/cslb"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 var routeMapping = map[string]string{
@@ -21,8 +21,10 @@ const (
 
 // UserHandler handles requests related to user management
 func UserHandler(w http.ResponseWriter, r *http.Request) {
-	// Create a new HTTP client
-	client := http.Client{}
+	// Create a new HTTP client with a timeout
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
 	cfg := config.LoadConfig()
 
 	// Create a new request to forward to the User Management service
@@ -46,14 +48,6 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer forwardResponse.Body.Close()
 
-	// Read the response body from the User Management service
-	responseBody, err := ioutil.ReadAll(forwardResponse.Body)
-	if err != nil {
-		log.Printf("Failed to read response body: %v", err)
-		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
-		return
-	}
-
 	// Set the response headers from the User Management service
 	for key, values := range forwardResponse.Header {
 		for _, value := range values {
@@ -61,9 +55,10 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Set the status code and write the response body to the client
-	log.Printf("%s request %s returned status code %d",
-		r.Method, cfg.UserServiceURL+routeMapping[r.URL.Path], forwardResponse.StatusCode)
-
-	utils.RespondWithJSON(w, forwardResponse.StatusCode, responseBody)
+	// Set the status code and stream the response body to the client
+	err = utils.WriteJSONResponse(w, forwardResponse)
+	if err != nil {
+		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
+		return
+	}
 }

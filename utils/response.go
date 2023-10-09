@@ -1,28 +1,48 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
-	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 )
 
+// RespondWithError sends an error message as a JSON response.
 func RespondWithError(w http.ResponseWriter, code int, message string) {
-	response := map[string]interface{}{
+	response := map[string]string{
 		"error": message,
 	}
 
-	WriteJSONResponse(w, code, response)
+	// Convert the response map to a JSON byte slice
+	responseBytes, err := json.Marshal(response)
+	if err != nil {
+		log.Printf("Failed to marshal error response: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Create a new http.Response object
+	resp := &http.Response{
+		StatusCode: code,
+		Body:       ioutil.NopCloser(bytes.NewReader(responseBytes)),
+		Header:     make(http.Header),
+	}
+
+	// Use the existing WriteJSONResponse function
+	if err := WriteJSONResponse(w, resp); err != nil {
+		log.Printf("Error while sending error response: %v", err)
+	}
 }
 
-func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-	WriteJSONResponse(w, code, payload)
-}
-
-func WriteJSONResponse(w http.ResponseWriter, code int, payload interface{}) {
-	response, _ := json.Marshal(payload)
-
-	fmt.Println(response)
+func WriteJSONResponse(w http.ResponseWriter, resp *http.Response) error {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
+	w.WriteHeader(resp.StatusCode)
+	_, err := io.Copy(w, resp.Body)
+	if err != nil {
+		log.Printf("Failed to write JSON response: %v", err)
+		return err
+	}
+	return nil
 }

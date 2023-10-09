@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/DarioKnezovic/api-gateway/config"
 	"github.com/DarioKnezovic/api-gateway/utils"
-	"io/ioutil"
+	_ "github.com/markdingo/cslb"
 	"log"
 	"net/http"
 )
@@ -36,13 +36,6 @@ func CampaignHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer forwardResponse.Body.Close()
 
-	responseBody, err := ioutil.ReadAll(forwardResponse.Body)
-	if err != nil {
-		log.Printf("Failed to read response body: %v", err)
-		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
-		return
-	}
-
 	for key, values := range forwardResponse.Header {
 		for _, value := range values {
 			w.Header().Add(key, value)
@@ -52,5 +45,9 @@ func CampaignHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s request %s returned status code %d",
 		r.Method, cfg.CampaignServiceURL+campaignRouteMapping[r.URL.Path], forwardResponse.StatusCode)
 
-	utils.RespondWithJSON(w, forwardResponse.StatusCode, responseBody)
+	err = utils.WriteJSONResponse(w, forwardResponse)
+	if err != nil {
+		utils.RespondWithError(w, http.StatusInternalServerError, INTERNAL_SERVER_ERROR)
+		return
+	}
 }
