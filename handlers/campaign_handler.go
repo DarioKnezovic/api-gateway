@@ -10,6 +10,7 @@ import (
 
 var campaignRouteMapping = map[string]string{
 	"/api/campaigns": "/api/campaign/all",
+	"/api/campaign":  "/api/campaign/create",
 }
 
 func CampaignHandler(w http.ResponseWriter, r *http.Request) {

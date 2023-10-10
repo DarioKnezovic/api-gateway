@@ -25,7 +25,7 @@ func main() {
 	router.HandleFunc("/api/logout", middleware.AuthenticationMiddleware(handlers.UserHandler)).Methods("POST")
 
 	router.HandleFunc("/api/campaigns", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("GET")
-
+	router.HandleFunc("/api/campaign", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("POST")
 	// Start the server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), router))
 }
