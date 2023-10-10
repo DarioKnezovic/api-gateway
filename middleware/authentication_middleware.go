@@ -27,7 +27,7 @@ func extractTokenFromBearerHeader(authorizationHeader string) (string, bool) {
 
 func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		log.Printf("Checking Authorization for this route: %v", r.URL)
 		authorizationHeader := r.Header.Get(AUTHORIZATION_HEADER)
 		if authorizationHeader == "" {
 			log.Println("Auth token is missing")
@@ -63,8 +63,5 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			utils.RespondWithError(w, http.StatusUnauthorized, UNAUTHORIZED)
 			return
 		}
-
-		// Call the next handler
-		next.ServeHTTP(w, r)
 	}
 }
