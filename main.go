@@ -27,6 +27,7 @@ func main() {
 	router.HandleFunc("/api/campaigns", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("GET")
 	router.HandleFunc("/api/campaign", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("POST")
 	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("GET")
+	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("PUT")
 	// Start the server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), router))
 }
