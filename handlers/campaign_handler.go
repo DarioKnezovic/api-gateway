@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/DarioKnezovic/api-gateway/config"
 	"github.com/DarioKnezovic/api-gateway/utils"
 	"github.com/gorilla/mux"
@@ -24,7 +23,6 @@ func CampaignHandler(w http.ResponseWriter, r *http.Request) {
 	client := http.Client{}
 	cfg := config.LoadConfig()
 	id := mux.Vars(r)["id"]
-	fmt.Println(id)
 
 	if id != "" {
 		forwardRequestKey = ReplaceLastSegmentWithID(r.URL.Path)
@@ -33,8 +31,6 @@ func CampaignHandler(w http.ResponseWriter, r *http.Request) {
 		forwardRequestKey = r.URL.Path
 		forwardRequestUrl = campaignRouteMapping[forwardRequestKey]
 	}
-
-	fmt.Println("forwardRequestUrl: " + forwardRequestUrl)
 
 	log.Printf("Forwarding %s request to: %s", r.Method, cfg.CampaignServiceURL+forwardRequestUrl)
 	forwardRequest, err := http.NewRequest(r.Method, cfg.CampaignServiceURL+forwardRequestUrl, r.Body)
