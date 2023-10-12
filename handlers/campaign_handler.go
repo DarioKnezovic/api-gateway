@@ -11,9 +11,9 @@ import (
 )
 
 var campaignRouteMapping = map[string]string{
-	"/api/campaigns":     "/api/campaign/all",
-	"/api/campaign":      "/api/campaign/create",
-	"/api/campaign/{id}": "/api/campaign/single/{id}",
+	"GET/api/campaigns":     "/api/campaign/all",
+	"POST/api/campaign":     "/api/campaign/create",
+	"GET/api/campaign/{id}": "/api/campaign/single/{id}",
 }
 
 func CampaignHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,10 +26,10 @@ func CampaignHandler(w http.ResponseWriter, r *http.Request) {
 
 	if id != "" {
 		forwardRequestKey = ReplaceLastSegmentWithID(r.URL.Path)
-		forwardRequestUrl = ReplaceIDInPath(campaignRouteMapping[forwardRequestKey], id)
+		forwardRequestUrl = ReplaceIDInPath(campaignRouteMapping[r.Method+forwardRequestKey], id)
 	} else {
 		forwardRequestKey = r.URL.Path
-		forwardRequestUrl = campaignRouteMapping[forwardRequestKey]
+		forwardRequestUrl = campaignRouteMapping[r.Method+forwardRequestKey]
 	}
 
 	log.Printf("Forwarding %s request to: %s", r.Method, cfg.CampaignServiceURL+forwardRequestUrl)
