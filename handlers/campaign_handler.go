@@ -11,10 +11,11 @@ import (
 )
 
 var campaignRouteMapping = map[string]string{
-	"GET/api/campaigns":     "/api/campaign/all",
-	"POST/api/campaign":     "/api/campaign/create",
-	"GET/api/campaign/{id}": "/api/campaign/single/{id}",
-	"PUT/api/campaign/{id}": "/api/campaign/update/{id}",
+	"GET/api/campaigns":        "/api/campaign/all",
+	"POST/api/campaign":        "/api/campaign/create",
+	"GET/api/campaign/{id}":    "/api/campaign/single/{id}",
+	"PUT/api/campaign/{id}":    "/api/campaign/update/{id}",
+	"DELETE/api/campaign/{id}": "/api/campaign/delete/{id}",
 }
 
 func CampaignHandler(w http.ResponseWriter, r *http.Request) {
