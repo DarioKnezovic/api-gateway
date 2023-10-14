@@ -20,15 +20,15 @@ func main() {
 	router.Use(middleware.LoggingMiddleware)
 
 	// Routes
-	router.HandleFunc("/api/login", handlers.UserHandler).Methods("POST")
-	router.HandleFunc("/api/register", handlers.UserHandler).Methods("POST")
-	router.HandleFunc("/api/logout", middleware.AuthenticationMiddleware(handlers.UserHandler)).Methods("POST")
+	router.HandleFunc("/api/login", handlers.ApiHandler).Methods("POST")
+	router.HandleFunc("/api/register", handlers.ApiHandler).Methods("POST")
+	router.HandleFunc("/api/logout", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("POST")
 
-	router.HandleFunc("/api/campaigns", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("GET")
-	router.HandleFunc("/api/campaign", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("POST")
-	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("GET")
-	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("PUT")
-	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.CampaignHandler)).Methods("DELETE")
+	router.HandleFunc("/api/campaigns", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("GET")
+	router.HandleFunc("/api/campaign", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("POST")
+	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("GET")
+	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("PUT")
+	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("DELETE")
 	// Start the server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), router))
 }

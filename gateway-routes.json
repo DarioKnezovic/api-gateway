@@ -1,0 +1,58 @@
+{
+  "POST /api/register": {
+    "incoming_path": "/api/register",
+    "outgoing_path": "/api/user/register",
+    "backend_service": "UserService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
+  },
+  "POST /api/login": {
+    "incoming_path": "/api/login",
+    "outgoing_path": "/api/user/login",
+    "backend_service": "UserService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
+  },
+  "POST /api/logout": {
+    "incoming_path": "/api/logout",
+    "outgoing_path": "/api/user/logout",
+    "backend_service": "UserService",
+    "requires_authentication": true,
+    "dynamic_parameter": false
+  },
+  "GET /api/campaigns": {
+    "incoming_path": "/api/campaigns",
+    "outgoing_path": "/api/campaign/all",
+    "backend_service": "CampaignService",
+    "requires_authentication": true,
+    "dynamic_parameter": false
+  },
+  "POST /api/campaign": {
+    "incoming_path": "/api/campaign",
+    "outgoing_path": "/api/campaign/create",
+    "backend_service": "CampaignService",
+    "requires_authentication": true,
+    "dynamic_parameter": false
+  },
+  "GET /api/campaign/{id}": {
+    "incoming_path": "/api/campaign/{id}",
+    "outgoing_path": "/api/campaign/single/{id}",
+    "backend_service": "CampaignService",
+    "requires_authentication": true,
+    "dynamic_parameter": true
+  },
+  "PUT /api/campaign/{id}": {
+    "incoming_path": "/api/campaign/{id}",
+    "outgoing_path": "/api/campaign/update/{id}",
+    "backend_service": "CampaignService",
+    "requires_authentication": true,
+    "dynamic_parameter": true
+  },
+  "DELETE /api/campaign/{id}": {
+    "incoming_path": "/api/campaign/{id}",
+    "outgoing_path": "/api/campaign/delete/{id}",
+    "backend_service": "CampaignService",
+    "requires_authentication": true,
+    "dynamic_parameter": true
+  }
+}
