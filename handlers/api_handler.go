@@ -16,6 +16,7 @@ import (
 
 // RouteInfo Define a struct that matches the structure of your JSON data
 type RouteInfo struct {
+	Method                 string `json:"method"`
 	IncomingPath           string `json:"incoming_path"`
 	OutgoingPath           string `json:"outgoing_path"`
 	BackendService         string `json:"backend_service"`
@@ -103,7 +104,6 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 	var forwardRequestUrl string
 
 	routeKey := fmt.Sprintf("%s %s", r.Method, r.URL.Path)
-	fmt.Println(routeKey)
 	if id != "" {
 		routeKey = ReplaceLastSegmentWithID(routeKey)
 	}

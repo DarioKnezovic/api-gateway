@@ -1,5 +1,6 @@
 {
   "POST /api/register": {
+    "method": "POST",
     "incoming_path": "/api/register",
     "outgoing_path": "/api/user/register",
     "backend_service": "UserService",
@@ -7,6 +8,7 @@
     "dynamic_parameter": false
   },
   "POST /api/login": {
+    "method": "POST",
     "incoming_path": "/api/login",
     "outgoing_path": "/api/user/login",
     "backend_service": "UserService",
@@ -14,6 +16,7 @@
     "dynamic_parameter": false
   },
   "POST /api/logout": {
+    "method": "POST",
     "incoming_path": "/api/logout",
     "outgoing_path": "/api/user/logout",
     "backend_service": "UserService",
@@ -21,6 +24,7 @@
     "dynamic_parameter": false
   },
   "GET /api/campaigns": {
+    "method": "GET",
     "incoming_path": "/api/campaigns",
     "outgoing_path": "/api/campaign/all",
     "backend_service": "CampaignService",
@@ -28,6 +32,7 @@
     "dynamic_parameter": false
   },
   "POST /api/campaign": {
+    "method": "POST",
     "incoming_path": "/api/campaign",
     "outgoing_path": "/api/campaign/create",
     "backend_service": "CampaignService",
@@ -35,6 +40,7 @@
     "dynamic_parameter": false
   },
   "GET /api/campaign/{id}": {
+    "method": "GET",
     "incoming_path": "/api/campaign/{id}",
     "outgoing_path": "/api/campaign/single/{id}",
     "backend_service": "CampaignService",
@@ -42,6 +48,7 @@
     "dynamic_parameter": true
   },
   "PUT /api/campaign/{id}": {
+    "method": "PUT",
     "incoming_path": "/api/campaign/{id}",
     "outgoing_path": "/api/campaign/update/{id}",
     "backend_service": "CampaignService",
@@ -49,6 +56,7 @@
     "dynamic_parameter": true
   },
   "DELETE /api/campaign/{id}": {
+    "method": "DELETE",
     "incoming_path": "/api/campaign/{id}",
     "outgoing_path": "/api/campaign/delete/{id}",
     "backend_service": "CampaignService",

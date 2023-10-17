@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/DarioKnezovic/api-gateway/config"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -14,21 +16,36 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 	log.Printf("Running %s on port %s...", cfg.ProjectName, cfg.APIPort)
+
+	jsonData, err := ioutil.ReadFile("./gateway-routes.json")
+	if err != nil {
+		log.Println("Error reading JSON file: ", err)
+		return
+	}
+
+	var routes map[string]handlers.RouteInfo
+
+	// Unmarshal the JSON data into the 'routes' map
+	err = json.Unmarshal(jsonData, &routes)
+	if err != nil {
+		log.Println("Error unmarshalling JSON data:", err)
+		return
+	}
+
 	router := mux.NewRouter()
 
 	// Middleware
 	router.Use(middleware.LoggingMiddleware)
 
 	// Routes
-	router.HandleFunc("/api/login", handlers.ApiHandler).Methods("POST")
-	router.HandleFunc("/api/register", handlers.ApiHandler).Methods("POST")
-	router.HandleFunc("/api/logout", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("POST")
+	for _, route := range routes {
+		if route.RequiresAuthentication {
+			router.HandleFunc(route.IncomingPath, middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods(route.Method)
+		} else {
+			router.HandleFunc(route.IncomingPath, handlers.ApiHandler).Methods(route.Method)
+		}
+	}
 
-	router.HandleFunc("/api/campaigns", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("GET")
-	router.HandleFunc("/api/campaign", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("POST")
-	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("GET")
-	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("PUT")
-	router.HandleFunc("/api/campaign/{id}", middleware.AuthenticationMiddleware(handlers.ApiHandler)).Methods("DELETE")
 	// Start the server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), router))
 }
