@@ -62,5 +62,13 @@
     "backend_service": "CampaignService",
     "requires_authentication": true,
     "dynamic_parameter": true
+  },
+  "GET /api/user/{id}/campaigns": {
+    "method": "GET",
+    "incoming_path": "/api/user/{id}/campaigns",
+    "outgoing_path": "/api/user/{id}/campaigns",
+    "backend_service": "CampaignService",
+    "requires_authentication": true,
+    "dynamic_parameter": true
   }
 }
