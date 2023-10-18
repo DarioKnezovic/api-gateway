@@ -10,7 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"regexp"
+	"strings"
 	"time"
 )
 
@@ -68,26 +68,27 @@ func HandleServiceUrl(backendService string) string {
 	}
 }
 
-func ReplaceLastSegmentWithID(path string) string {
-	// Define a regular expression pattern to match the last segment
-	// of the path that looks like an integer (e.g., "/4").
-	pattern := `/(\d+)$`
-	r := regexp.MustCompile(pattern)
+func ReplaceIDInPath(path string, id string) string {
+	// Split the path into segments using the "/" delimiter.
+	segments := strings.Split(path, "/")
 
-	// Find the last segment in the path that matches the pattern.
-	// Replace it with "{id}" if found.
-	newPath := r.ReplaceAllString(path, `/{id}`)
+	// Iterate through the segments and replace any segment that
+	// matches the provided ID with the new ID.
+	for i, segment := range segments {
+		if segment == id {
+			segments[i] = "{id}"
+		}
+	}
+
+	// Join the modified segments back into a path string.
+	newPath := strings.Join(segments, "/")
 
 	return newPath
 }
 
-func ReplaceIDInPath(path string, id string) string {
-	// Define a regular expression pattern to match "{id}".
-	pattern := `/{id}`
-	r := regexp.MustCompile(pattern)
-
-	// Replace "{id}" with the provided ID.
-	newPath := r.ReplaceAllString(path, "/"+id)
+func ReplacePlaceholderWithID(path string, id string) string {
+	// Replace all occurrences of "{id}" with the provided ID.
+	newPath := strings.ReplaceAll(path, "{id}", id)
 
 	return newPath
 }
@@ -105,7 +106,7 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 
 	routeKey := fmt.Sprintf("%s %s", r.Method, r.URL.Path)
 	if id != "" {
-		routeKey = ReplaceLastSegmentWithID(routeKey)
+		routeKey = ReplaceIDInPath(routeKey, id)
 	}
 
 	route := routes[routeKey]
@@ -117,7 +118,7 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 	if id == "" {
 		forwardRequestUrl = fmt.Sprintf("%s%s", backendUrl, route.OutgoingPath)
 	} else {
-		forwardRequestUrl = fmt.Sprintf("%s%s", backendUrl, ReplaceIDInPath(route.OutgoingPath, id))
+		forwardRequestUrl = fmt.Sprintf("%s%s", backendUrl, ReplacePlaceholderWithID(route.OutgoingPath, id))
 	}
 
 	// Create a new HTTP client with a timeout
