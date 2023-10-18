@@ -78,5 +78,13 @@
     "backend_service": "UserService",
     "requires_authentication": true,
     "dynamic_parameter": true
+  },
+  "PUT /api/users/{id}": {
+    "method": "PUT",
+    "incoming_path": "/api/users/{id}",
+    "outgoing_path": "/api/users/{id}",
+    "backend_service": "UserService",
+    "requires_authentication": true,
+    "dynamic_parameter": true
   }
 }
