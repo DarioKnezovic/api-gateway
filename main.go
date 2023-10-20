@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/DarioKnezovic/api-gateway/config"
-	"io/ioutil"
-	"log"
-	"net/http"
-
 	"github.com/DarioKnezovic/api-gateway/handlers"
 	"github.com/DarioKnezovic/api-gateway/middleware"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -46,6 +46,15 @@ func main() {
 		}
 	}
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+	})
+
+	handler := c.Handler(router)
+
 	// Start the server
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", cfg.APIPort), handler))
 }
