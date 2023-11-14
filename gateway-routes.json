@@ -63,6 +63,14 @@
     "requires_authentication": true,
     "dynamic_parameter": true
   },
+  "GET /api/campaign/init/{id}": {
+    "method": "GET",
+    "incoming_path": "/api/campaign/init/{id}",
+    "outgoing_path": "/api/campaign/init/{id}",
+    "backend_service": "CampaignService",
+    "requires_authentication": false,
+    "dynamic_parameter": true
+  },
   "GET /api/user/{id}/campaigns": {
     "method": "GET",
     "incoming_path": "/api/user/{id}/campaigns",
