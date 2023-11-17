@@ -102,5 +102,11 @@
     "backend_service": "UserService",
     "requires_authentication": true,
     "dynamic_parameter": true
+  },
+  "GET /api/test": {
+    "method": "GET",
+    "incoming_path": "/api/test",
+    "outgoing_path": "/api/test",
+    "backend_service": "AnalyticsService"
   }
 }

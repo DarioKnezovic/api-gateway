@@ -63,6 +63,8 @@ func HandleServiceUrl(backendService string) string {
 		return cfg.UserServiceURL
 	case "CampaignService":
 		return cfg.CampaignServiceURL
+	case "AnalyticsService":
+		return cfg.AnalyticsServiceURL
 	default:
 		return ""
 	}
