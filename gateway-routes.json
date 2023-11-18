@@ -116,5 +116,13 @@
     "backend_service": "AnalyticsService",
     "requires_authentication": false,
     "dynamic_parameter": false
+  },
+  "POST /api/user/interaction": {
+    "method": "POST",
+    "incoming_path": "/api/user/interaction",
+    "outgoing_path": "/api/analytics/modal-ctr-tracking",
+    "backend_service": "AnalyticsService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
   }
 }
