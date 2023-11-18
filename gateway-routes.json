@@ -108,5 +108,13 @@
     "incoming_path": "/api/test",
     "outgoing_path": "/api/test",
     "backend_service": "AnalyticsService"
+  },
+  "POST /api/user/visit": {
+    "method": "POST",
+    "incoming_path": "/api/user/visit",
+    "outgoing_path": "/api/analytics/visiting-users",
+    "backend_service": "AnalyticsService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
   }
 }

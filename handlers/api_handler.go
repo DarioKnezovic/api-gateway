@@ -114,7 +114,7 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 	route := routes[routeKey]
 	backendUrl := HandleServiceUrl(route.BackendService)
 	if backendUrl == "" {
-		log.Printf("Cannot find backend URL for this route: %s", routeKey)
+		log.Fatalf("Cannot find backend URL for this route: %s", routeKey)
 	}
 
 	if id == "" {
