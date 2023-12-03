@@ -123,6 +123,12 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 		forwardRequestUrl = fmt.Sprintf("%s%s", backendUrl, ReplacePlaceholderWithID(route.OutgoingPath, id))
 	}
 
+	queryString := r.URL.RawQuery
+
+	if queryString != "" {
+		forwardRequestUrl = fmt.Sprintf("%s?%s", forwardRequestUrl, queryString)
+	}
+
 	// Create a new HTTP client with a timeout
 	client := &http.Client{
 		Timeout: 30 * time.Second,

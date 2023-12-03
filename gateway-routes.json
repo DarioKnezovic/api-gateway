@@ -124,5 +124,29 @@
     "backend_service": "AnalyticsService",
     "requires_authentication": false,
     "dynamic_parameter": false
+  },
+  "GET /api/analytics/adblock-rate": {
+    "method": "GET",
+    "incoming_path": "/api/analytics/adblock-rate",
+    "outgoing_path": "/api/analytics/adblock-rate",
+    "backend_service": "AnalyticsService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
+  },
+  "GET /api/analytics/adblock-rate/history": {
+    "method": "GET",
+    "incoming_path": "/api/analytics/adblock-rate/history",
+    "outgoing_path": "/api/analytics/adblock-rate/history",
+    "backend_service": "AnalyticsService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
+  },
+  "GET /api/analytics/modal-ctr-tracking": {
+    "method": "GET",
+    "incoming_path": "/api/analytics/modal-ctr-tracking",
+    "outgoing_path": "/api/analytics/modal-ctr-tracking",
+    "backend_service": "AnalyticsService",
+    "requires_authentication": false,
+    "dynamic_parameter": false
   }
 }
